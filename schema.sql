@@ -9,10 +9,11 @@ create table department (
 );
 
 create table roles (
-	role_id INT (4) NOT NULL,
+	role_id INT (4) AUTO_INCREMENT NOT NULL,
 	title VARCHAR (40) NOT NULL,
 	salary DECIMAL (15,2) NOT NULL,
-	department_id INT (30) NOT NULL   
+	department_id INT (30) NOT NULL
+    primary key (role_id)   
 );
 
 create table employees (

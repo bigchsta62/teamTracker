@@ -156,13 +156,13 @@ function dpInquire() {
       type: "input",
       message: "What is the employees first name?"
       
-    }
+    },
     {
       name: "lName",
       type: "input",
       message: "What is the employees last name?"
     
-    }
+    },
     {
       name: "fName",
       type: "list",

@@ -46,9 +46,9 @@ const Q1 = [
       "View All Employees by Department",
       "View All Roles",
       // "View All Employees By Manager",
-      "Remove Employee",
+      // "Remove Employee",
       "Update Employee Role",
-      "Update Employee Manager",
+      // "Update Employee Manager",
     ],
   },
 ];
@@ -77,15 +77,15 @@ function runSearch() {
       // case "View All Employees By Manager":
       //   managerView();
       //   break;
-      case "Remove Employee":
-        emplyeeRemove();
-        break;
+      // case "Remove Employee":
+      //   emplyeeRemove();
+      //   break;
       case "Update Employee Role":
         employeeRole();
         break;
-      case "Update Employee Manager":
-        emplyeeManager();
-        break;
+      // case "Update Employee Manager":
+      //   emplyeeManager();
+      //   break;
     }
   });
 }
@@ -211,9 +211,7 @@ function allEmployeesView() {
     }
   );
 }
-
 //This displays each team based on department selected
-
 function departmentView() {
   connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
@@ -229,10 +227,13 @@ function roleView() {
     for (let i = 0; i < res.length; i++) {
       choices.push(res[i].title);
     }
-    roleInquire();
+
+    connection.query("SELECT * FROM roles", function (err, res) {
+      console.table(res);
+      runSearch();
+    });
   });
 }
-
 //This runs when User selects view by dept
 function dpInquire() {
   inquirer
@@ -266,10 +267,52 @@ function dpInquire() {
       });
     });
 }
-function roleInquire() {
+
+function employeeRole() {
+  const titles = [];
+  const t = [];
   connection.query("SELECT * FROM roles", function (err, res) {
-    console.table(res);
-    runSearch();
+    if (err) throw err;
+    for (let i = 0; i < res.length; i++) {
+      titles.push(res[i].title);
+      // console.log(titles)
+    }
+    inquirer
+      .prompt([
+        {
+          name: "role",
+          type: "list",
+          message: "What Role would you like to update?",
+          choices: titles,
+        },
+        {
+          name: "new",
+          type: "input",
+          message: "Enter New Role Name",
+        },
+      ])
+      .then(function (answer) {
+        connection.query(
+          "SELECT role_id FROM roles where title = ?",
+          [answer.role],
+          function (err, res) {
+            if (err) throw err;
+            titles.length = 0;
+            t.push(res[0].role_id);
+            connection.query(
+              "UPDATE roles SET title = ? WHERE role_id = ?",
+              [answer.new, t],
+              function (err, data) {
+                if (err) throw err;
+                console.log("\n" + "   New role updated." + "\n");
+                runSearch();
+              }
+              
+            );
+            titles.length = 0;
+          }
+        );
+      });
   });
 }
 

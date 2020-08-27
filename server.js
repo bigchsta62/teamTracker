@@ -2,6 +2,7 @@ const mysql = require("mysql");
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
 const chalk = require("chalk");
+const choices = [];
 
 //Figlet to make team tracker banner
 var figlet = require("figlet");
@@ -51,7 +52,6 @@ const Q1 = [
     ],
   },
 ];
-
 
 function runSearch() {
   inquirer.prompt(Q1).then(function (answer) {
@@ -143,21 +143,62 @@ function roleAdd() {
       );
     });
 }
-// function employeeAdd() {
-//   inquirer
-//     .prompt({
-//       name: "department",
-//       type: "input",
-//       message: "Please enter first name",
-//     })
-//     .then(function (answer) {
-//       const query = "INSERT INTO department (department_name) VALUES (?)";
-//       connection.query(query, [answer.department], function (err, res) {
-//         console.table(res);
-//         runSearch();
-//       });
-//     });
-// }
+function employeeAdd() {
+  const departments = [];
+  const ans = [];
+  connection.query("SELECT * FROM roles;", function (err, res) {
+    if (err) throw err;
+    for (let i = 0; i < res.length; i++) {
+      departments.push(res[i].title);
+    }
+    inquirer
+      .prompt([
+        {
+          name: "fName",
+          type: "input",
+          message: "What is the employees first name?",
+        },
+        {
+          name: "lName",
+          type: "input",
+          message: "What is the employees last name?",
+        },
+        {
+          name: "manager",
+          type: "input",
+          message: "Who is the employees Manager?",
+        },
+        {
+          name: "role",
+          type: "list",
+          message: "What is the employees role",
+          choices: departments,
+        },
+      ])
+      .then(function (answer) {
+        connection.query(
+          "SELECT role_id FROM roles where title = ?",
+          [answer.role],
+          function (err, res) {
+            if (err) throw err;
+            departments.length = 0;
+            ans.push(res[0].role_id);
+            connection.query(
+              "INSERT INTO employees (first_Name, last_name, manager_id, role_id) VALUES (?, ?, ?, ?)",
+              [answer.fName, answer.lName, answer.manager, ans],
+              function (err, data) {
+                if (err) throw err;
+                console.log("\n" + "   New role added." + "\n");
+                runSearch();
+              }
+            );
+            //Empties array to prevent continuously adding the same information
+            departments.length = 0;
+          }
+        );
+      });
+  });
+}
 
 // This will display the entire team_db in a easy to read format
 function allEmployeesView() {
@@ -173,7 +214,6 @@ function allEmployeesView() {
 
 //This displays each team based on department selected
 
-const choices = [];
 function departmentView() {
   connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;

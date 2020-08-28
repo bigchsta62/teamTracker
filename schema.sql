@@ -3,16 +3,16 @@ CREATE DATABASE team_db;
 USE team_db;
 
 create table department (    
-	id INT (4) AUTO_INCREMENT NOT NULL,
+	department_id INT (4) AUTO_INCREMENT NOT NULL,
 	department_name VARCHAR (40) NOT NULL,
-	primary key (id)
+	primary key (department_id)
 );
 
 create table roles (
 	role_id INT (4) AUTO_INCREMENT NOT NULL,
 	title VARCHAR (40) NOT NULL,
 	salary DECIMAL (15,2) NOT NULL,
-	department_id INT (30) NOT NULL
+	department_id INT (30) NOT NULL,
     primary key (role_id)   
 );
 
@@ -38,12 +38,12 @@ VALUES
     
  
     
-INSERT INTO department (department_name)
+INSERT INTO department (department_id, department_name)
 VALUES
-    ("sales"),
-    ("engineering"),
-    ("finance"),
-    ("legal");
+   (1, "sales"),
+    (2, "engineering"),
+    (3, "finance"),
+    (4, "legal");
     
 INSERT INTO roles (role_id, title, salary, department_id)
 VALUES
@@ -52,6 +52,6 @@ VALUES
     (20, "lead engineer", 150000, 2),
     (21, "software engineer", 120000, 2),
     (31, "accountant", 125000, 3),
-    (40, "leagal team lead", 250000, 4),
+    (40, "legal team lead", 250000, 4),
     (41, "lawyer", 190000, 4);
     

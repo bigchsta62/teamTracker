@@ -7,7 +7,7 @@ const choices = [];
 //Figlet to make team tracker banner
 var figlet = require("figlet");
 console.log(
-  chalk.yellow.bgBlueBright.bold(
+  chalk.yellow.bold(
     figlet.textSync("Team Tracker", {
       horizontalLayout: "default",
       verticalLayout: "default",
@@ -45,10 +45,8 @@ const Q1 = [
       "View All Employees",
       "View All Employees by Department",
       "View All Roles",
-      // "View All Employees By Manager",
-      // "Remove Employee",
       "Update Employee Role",
-      // "Update Employee Manager",
+      "EXIT",
     ],
   },
 ];
@@ -74,18 +72,12 @@ function runSearch() {
       case "View All Roles":
         roleView();
         break;
-      // case "View All Employees By Manager":
-      //   managerView();
-      //   break;
-      // case "Remove Employee":
-      //   emplyeeRemove();
-      //   break;
       case "Update Employee Role":
         employeeRole();
         break;
-      // case "Update Employee Manager":
-      //   emplyeeManager();
-      //   break;
+      case "EXIT":
+        exit();
+        break;
     }
   });
 }
@@ -100,12 +92,13 @@ function departmentAdd() {
     .then(function (answer) {
       const query = "INSERT INTO department (department_name) VALUES (?)";
       connection.query(query, [answer.department], function (err, res) {
-        console.log(answer.department);
-        console.table(res);
+        console.log("   New department ",answer.department," added" );
+        
         runSearch();
       });
     });
 }
+
 function roleAdd() {
   inquirer
     .prompt([
@@ -113,21 +106,53 @@ function roleAdd() {
         name: "role_id",
         type: "input",
         message: "Please enter Role id",
+        validate: function num(ans) {
+          if (isNaN(ans) || ans.length === 0) {
+            return "Please enter numbers only";
+          }
+          return true;
+        },
       },
       {
         name: "title",
         type: "input",
         message: "Please enter Role name",
+        validate: function string(ans) {
+          if (ans.length === 0) {
+            console.log("This cannot be blank");
+            return false;
+          } else {
+            return true;
+          }
+        },
       },
+
       {
         name: "salary",
         type: "input",
         message: "Please enter Salary",
+        validate: function num(ans) {
+          if (isNaN(ans)) {
+            return "Please enter numbers only";
+          }
+          return true;
+        },
       },
       {
         name: "id",
         type: "input",
-        message: "Please enter Role ID number",
+        choices: () => {
+          connection.query("select * from department", function (err, res) {
+            console.table("\n", res);
+          });
+        },
+        message: "Please enter Department ID number" +"\n" + "   From the list below",
+        validate: function num(ans) {
+          if (isNaN(ans)) {
+            return "Please enter numbers only";
+          }
+          return true;
+        },
       },
     ])
     .then(function (answer) {
@@ -137,7 +162,7 @@ function roleAdd() {
         function (err, data) {
           if (err) throw err;
           console.log("New role added.");
-          console.log(answer.title, answer.salary, answer.id);
+          console.table(answer.title, answer.salary, answer.id);
           runSearch();
         }
       );
@@ -188,7 +213,7 @@ function employeeAdd() {
               [answer.fName, answer.lName, answer.manager, ans],
               function (err, data) {
                 if (err) throw err;
-                console.log("\n" + "   New role added." + "\n");
+                console.log("\n" + "   New Employee added." + "\n");
                 runSearch();
               }
             );
@@ -245,15 +270,18 @@ function dpInquire() {
     })
     .then(function (answer) {
       console.log(
-        figlet.textSync(
-          `${answer.department} department
+        chalk.yellow.bold(
+          figlet.textSync(
+            `${answer.department} department
+            
           `,
-          {
-            horizontalLayout: "default",
-            verticalLayout: "default",
-            width: 80,
-            whitespaceBreak: true,
-          }
+            {
+              horizontalLayout: "default",
+              verticalLayout: "default",
+              width: 80,
+              whitespaceBreak: true,
+            }
+          )
         )
       );
       //Empties choices array to prevent continuous ly adding the same information
@@ -275,7 +303,6 @@ function employeeRole() {
     if (err) throw err;
     for (let i = 0; i < res.length; i++) {
       titles.push(res[i].title);
-      // console.log(titles)
     }
     inquirer
       .prompt([
@@ -307,7 +334,6 @@ function employeeRole() {
                 console.log("\n" + "   New role updated." + "\n");
                 runSearch();
               }
-              
             );
             titles.length = 0;
           }
@@ -316,73 +342,16 @@ function employeeRole() {
   });
 }
 
-// function allEmployeesView() {
-//   inquirer
-//     .prompt(
-//       {
-//         name: "fName",
-//         type: "input",
-//         message: "What is the employees first name?",
-//       },
-//       {
-//         name: "lName",
-//         type: "input",
-//         message: "What is the employees last name?",
-//       },
-//       {
-//         name: "fName",
-//         type: "list",
-//         message: "What is the employees first name?",
-//         choices: departments,
-//       }
-//     )
-//     .then(function (answer) {
-//       console.log(
-//         figlet.textSync(
-//           `${answer.department} department
-//           `,
-//           {
-//             horizontalLayout: "default",
-//             verticalLayout: "default",
-//             width: 80,
-//             whitespaceBreak: true,
-//           }
-//         )
-//       );
-//       //Empties choices array to prevent continuous ly adding the same information
-//       choices.length = 0;
-//       //Query to grab and display information
-//       const query =
-//         "SELECT first_Name, last_name, title, salary, manager_id FROM roles right JOIN employees using (role_id) left join department using (department_id) WHERE department_name = ?";
-//       connection.query(query, [answer.department], function (err, res) {
-//         console.table(res);
-//         runSearch();
-//       });
-//     });
-// }
-// function managerView() {
-//   const query =
-//     "SELECT first_Name, last_name, title, salary, department _id FROM roles right JOIN employees using (role_id) left join department using (manager_id) WHERE department_name = ?";
-//     connection.query(query, [answer.manager_id], function (err, res) {
-//       console.table(res);
-//       runSearch();
-//     }
-//   );
-
-//   //****** The first thing to do is find out what department the EU wants to view ******
-
-//   inquirer
-//     .prompt({
-//       name: "department",
-//       type: "list",
-//       message: "What department would you like to view?",
-//       choices: dpArray,
-//     })
-//     .then(function (answer) {
-//       const query = "SELECT department_name FROM department";
-//       // connection.query(query, { artist: answer.artist }, function (err, res) {
-//       //          }
-//       //   runSearch();
-//       // });
-//     });
-// }
+function exit() {
+  console.log(
+    chalk.yellow.bold(
+      figlet.textSync(`G O O D B Y E`, {
+        horizontalLayout: "default",
+        verticalLayout: "default",
+        width: 80,
+        whitespaceBreak: true,
+      })
+    )
+  );
+  connection.end();
+}

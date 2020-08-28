@@ -37,11 +37,11 @@
 * In the root directory of the cloned repo, type "node server.js" and hit the enter key.
 
 * It gives you a list of options
-![screenshot](update)
+![screenshot](https://github.com/bigchsta62/teamTracker/blob/master/images/main%20team.jpg?raw=true)
 
 * When you are done select exit to close the CLI
 
-[![demo_vid](http://img.youtube.com/vi/xG2d_UlmLMc/0.jpg)](http://www.youtube.com/watch?v=xG2d_UlmLMc "demo")
+[![demo_vid](https://drive.google.com/file/d/188lGNnC8cpkSBhkMEskZnaQbiJ73IsWp/preview.jpg)](https://drive.google.com/file/d/188lGNnC8cpkSBhkMEskZnaQbiJ73IsWp/preview "demo")
 
 ## License
 This application is covered under the following license(s)

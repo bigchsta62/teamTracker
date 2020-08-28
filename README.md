@@ -41,7 +41,7 @@
 
 * When you are done select exit to close the CLI
 
-[![demo_vid](https://drive.google.com/file/d/188lGNnC8cpkSBhkMEskZnaQbiJ73IsWp/preview.jpg)](https://drive.google.com/file/d/188lGNnC8cpkSBhkMEskZnaQbiJ73IsWp/preview "demo")
+[![team](http://img.youtube.com/vi/zQZXhROSSgU/0.jpg)](http://www.youtube.com/watch?v=zQZXhROSSgU "teamTracker")
 
 ## License
 This application is covered under the following license(s)

@@ -39,6 +39,8 @@
 * It gives you a list of options
 ![screenshot](https://github.com/bigchsta62/teamTracker/blob/master/images/main%20team.jpg?raw=true)
 
+
+
 * When you are done select exit to close the CLI
 
 [![team](http://img.youtube.com/vi/zQZXhROSSgU/0.jpg)](http://www.youtube.com/watch?v=zQZXhROSSgU "teamTracker")

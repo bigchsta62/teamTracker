@@ -37,7 +37,9 @@
 * In the root directory of the cloned repo, type "node server.js" and hit the enter key.
 
 * It gives you a list of options
-![screenshot](https://github.com/bigchsta62/teamTracker/blob/master/images/main%20team.jpg?raw=true)
+
+
+* ![screenshot](https://github.com/bigchsta62/teamTracker/blob/master/images/main%20team.jpg?raw=true)
 
 
 
@@ -59,7 +61,7 @@ MIT License
 * Share it if you find it useful.
 
 ## Tests
- All tests are in the /test folder of this repo
+ None
 
 ## Questions
 Link to this repo:  https://github.com/bigchsta62/templateEngine
